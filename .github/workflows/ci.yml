@@ -36,15 +36,10 @@ jobs:
         override: true
         components: rustfmt
 
-    - name: Update crates
-      run: cargo update
-
-    - name: Cache crates
-      uses: actions/cache@v2
+    - name: Set up rust cache
+      uses: Swatinem/rust-cache@v1
       with:
-        path: ~/.cargo/registry/cache
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: ${{ runner.os }}-cargo-
+        working-directory: arcanist
 
     - name: Run tests
       run: cargo test
@@ -77,15 +72,10 @@ jobs:
     - name: Run rustfmt
       run: cargo fmt --all -- --check
 
-    - name: Update crates
-      run: cargo update
-
-    - name: Cache crates
-      uses: actions/cache@v2
+    - name: Set up rust cache
+      uses: Swatinem/rust-cache@v1
       with:
-        path: ~/.cargo/registry/cache
-        key: cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: cargo-
+        working-directory: arcanist
 
     - name: Run clippy
       uses: actions-rs/clippy-check@v1
