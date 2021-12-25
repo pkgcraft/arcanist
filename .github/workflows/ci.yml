@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: arcanist
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -16,6 +19,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        path: arcanist
+
+    - name: Checkout pkgcraft
+      uses: actions/checkout@v2
+      with:
+        repository: pkgcraft/pkgcraft
+        path: pkgcraft
 
     - name: Set up rust toolchain
       uses: actions-rs/toolchain@v1
@@ -40,9 +51,20 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: arcanist
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        path: arcanist
+
+    - name: Checkout pkgcraft
+      uses: actions/checkout@v2
+      with:
+        repository: pkgcraft/pkgcraft
+        path: pkgcraft
 
     - name: Set up rust toolchain
       uses: actions-rs/toolchain@v1
@@ -69,3 +91,6 @@ jobs:
       uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        # workaround since working-directory isn't supported yet
+        # https://github.com/actions-rs/clippy-check/issues/28
+        args: --manifest-path arcanist/Cargo.toml
