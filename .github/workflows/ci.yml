@@ -15,6 +15,16 @@ jobs:
         rust-version: ['1.56.0', '1.58.0']
 
     steps:
+    - name: Checkout scallop
+      uses: actions/checkout@v2
+      with:
+        repository: pkgcraft/scallop
+        path: scallop
+        submodules: true
+
+    - name: Move scallop into expected location
+      run: mv scallop ../
+
     - name: Checkout pkgcraft
       uses: actions/checkout@v2
       with:
@@ -58,6 +68,16 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout scallop
+      uses: actions/checkout@v2
+      with:
+        repository: pkgcraft/scallop
+        path: scallop
+        submodules: true
+
+    - name: Move scallop into expected location
+      run: mv scallop ../
+
     - name: Checkout pkgcraft
       uses: actions/checkout@v2
       with:
