@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        rust-version: ['1.56.0', 'stable']
+        rust-version: ['1.56.0', '1.58.0']
 
     steps:
     - name: Checkout pkgcraft
@@ -61,7 +61,7 @@ jobs:
     - name: Set up rust toolchain
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: stable
+        toolchain: '1.58.0'
         profile: minimal
         override: true
         components: clippy, rustfmt
