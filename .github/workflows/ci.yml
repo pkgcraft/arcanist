@@ -47,6 +47,7 @@ jobs:
         toolchain: ${{ matrix.rust-version }}
         profile: minimal
         override: true
+        components: rustfmt
 
     - name: Set up rust cache
       uses: actions/cache@v2
