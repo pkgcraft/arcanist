@@ -1,16 +1,16 @@
 use anyhow::{Context, Result};
-use clap::{App, Arg, ArgMatches, ArgSettings};
+use clap::{Arg, ArgMatches, Command};
 
 use crate::Client;
 use arcanist::proto::ListRequest;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new("sync")
+pub fn cmd() -> Command<'static> {
+    Command::new("sync")
         .about("sync repos")
         .arg(Arg::new("repos")
-            .setting(ArgSettings::TakesValue)
-            .setting(ArgSettings::MultipleValues)
+            .takes_value(true)
+            .multiple_values(true)
             .value_name("REPO")
             .help("repos to sync"))
 }

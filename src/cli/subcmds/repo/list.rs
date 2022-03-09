@@ -1,12 +1,12 @@
 use anyhow::Result;
-use clap::App;
+use clap::Command;
 
 use crate::Client;
 use arcanist::proto::StringRequest;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new("list")
+pub fn cmd() -> Command<'static> {
+    Command::new("list")
         .about("list repos")
         .long_about("List repositories ordered by their priority and then location.")
 }

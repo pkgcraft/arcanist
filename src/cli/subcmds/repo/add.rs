@@ -1,18 +1,18 @@
 use anyhow::{Context, Result};
-use clap::{App, Arg, ArgMatches, ArgSettings};
+use clap::{Arg, ArgMatches, Command};
 
 use crate::Client;
 use arcanist::proto::AddRepoRequest;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new("add")
+pub fn cmd() -> Command<'static> {
+    Command::new("add")
         .about("register repo")
         .arg(Arg::new("name")
-            .setting(ArgSettings::Required)
+            .required(true)
             .help("repo name"))
         .arg(Arg::new("uri")
-            .setting(ArgSettings::Required)
+            .required(true)
             .help("repo location"))
 }
 

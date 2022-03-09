@@ -1,5 +1,5 @@
 use anyhow::Result;
-use clap::{App, AppSettings, ArgMatches};
+use clap::{ArgMatches, Command};
 
 use crate::settings::Settings;
 use crate::Client;
@@ -11,11 +11,12 @@ mod new;
 mod sync;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new("repo")
+pub fn cmd() -> Command<'static> {
+    Command::new("repo")
         .about("manage repos")
-        .setting(AppSettings::DisableHelpSubcommand)
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+        .disable_help_subcommand(true)
+        .subcommand_required(true)
+        .arg_required_else_help(true)
         .subcommand(add::cmd())
         .subcommand(del::cmd())
         .subcommand(list::cmd())

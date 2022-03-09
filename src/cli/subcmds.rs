@@ -1,5 +1,5 @@
 use anyhow::Result;
-use clap::{App, ArgMatches};
+use clap::{ArgMatches, Command};
 
 use crate::settings::Settings;
 use crate::Client;
@@ -11,7 +11,7 @@ mod search;
 mod version;
 
 #[rustfmt::skip]
-pub fn register() -> Vec<App<'static>> {
+pub fn register() -> Vec<Command<'static>> {
     vec![
         add::cmd(),
         del::cmd(),

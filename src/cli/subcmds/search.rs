@@ -1,17 +1,17 @@
 use anyhow::Result;
-use clap::{App, AppSettings, Arg, ArgMatches, ArgSettings};
+use clap::{Arg, ArgMatches, Command};
 
 use crate::Client;
 use arcanist::proto::ListRequest;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new("search")
+pub fn cmd() -> Command<'static> {
+    Command::new("search")
         .about("search repos")
-        .setting(AppSettings::DisableHelpSubcommand)
+        .disable_help_subcommand(true)
         .arg(Arg::new("pkgs")
-            .setting(ArgSettings::TakesValue)
-            .setting(ArgSettings::MultipleValues)
+            .takes_value(true)
+            .multiple_values(true)
             .value_name("TARGET")
             .help("extended atom matching"))
 }

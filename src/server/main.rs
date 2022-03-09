@@ -2,7 +2,7 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use anyhow::{bail, Context, Result};
-use clap::{App, Arg, ArgSettings};
+use clap::{Arg, Command};
 use futures::TryFutureExt;
 use pkgcraft::config::Config as PkgcraftConfig;
 use tokio::net::{TcpListener, UnixListener};
@@ -19,32 +19,32 @@ mod settings;
 mod uds;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new(env!("CARGO_BIN_NAME"))
+pub fn cmd() -> Command<'static> {
+    Command::new(env!("CARGO_BIN_NAME"))
         .version(env!("CARGO_PKG_VERSION"))
         .about("package-building daemon leveraging pkgcraft")
         .arg(Arg::new("debug")
             .long("debug")
             .help("enable debug output"))
         .arg(Arg::new("verbose")
-            .setting(ArgSettings::MultipleOccurrences)
+            .multiple_occurrences(true)
             .short('v')
             .long("verbose")
             .help("enable verbose output"))
         .arg(Arg::new("quiet")
-            .setting(ArgSettings::MultipleOccurrences)
+            .multiple_occurrences(true)
             .short('q')
             .long("quiet")
             .help("suppress non-error messages"))
         .arg(Arg::new("socket")
-            .setting(ArgSettings::TakesValue)
-            .setting(ArgSettings::ForbidEmptyValues)
+            .takes_value(true)
+            .forbid_empty_values(true)
             .long("bind")
             .value_name("IP:port")
             .help("bind to given network socket"))
         .arg(Arg::new("config")
-            .setting(ArgSettings::TakesValue)
-            .setting(ArgSettings::ForbidEmptyValues)
+            .takes_value(true)
+            .forbid_empty_values(true)
             .long("config")
             .value_name("PATH")
             .help("path to config file"))

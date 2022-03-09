@@ -1,14 +1,14 @@
 use anyhow::Result;
-use clap::{App, AppSettings};
+use clap::Command;
 
 use crate::Client;
 use arcanist::proto::StringRequest;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new("version")
+pub fn cmd() -> Command<'static> {
+    Command::new("version")
         .about("query arcanist for client/server version info")
-        .setting(AppSettings::DisableHelpSubcommand)
+        .disable_help_subcommand(true)
 }
 
 pub async fn run(client: &mut Client) -> Result<()> {

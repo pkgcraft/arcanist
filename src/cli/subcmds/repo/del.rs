@@ -1,17 +1,17 @@
 use anyhow::{Context, Result};
-use clap::{App, Arg, ArgMatches, ArgSettings};
+use clap::{Arg, ArgMatches, Command};
 
 use crate::Client;
 use arcanist::proto::ListRequest;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new("del")
+pub fn cmd() -> Command<'static> {
+    Command::new("del")
         .about("remove repo(s)")
         .arg(Arg::new("repos")
-            .setting(ArgSettings::Required)
-            .setting(ArgSettings::TakesValue)
-            .setting(ArgSettings::MultipleValues)
+            .required(true)
+            .takes_value(true)
+            .multiple_values(true)
             .value_name("REPO")
             .help("repos to remove"))
 }

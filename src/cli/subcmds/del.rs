@@ -1,18 +1,18 @@
 use anyhow::Result;
-use clap::{App, AppSettings, Arg, ArgMatches, ArgSettings};
+use clap::{Arg, ArgMatches, Command};
 
 use crate::Client;
 use arcanist::proto::ListRequest;
 
 #[rustfmt::skip]
-pub fn cmd() -> App<'static> {
-    App::new("del")
+pub fn cmd() -> Command<'static> {
+    Command::new("del")
         .about("remove packages")
-        .setting(AppSettings::DisableHelpSubcommand)
+        .disable_help_subcommand(true)
         .arg(Arg::new("pkgs")
-            .setting(ArgSettings::TakesValue)
-            .setting(ArgSettings::MultipleValues)
-            .setting(ArgSettings::Required)
+            .required(true)
+            .takes_value(true)
+            .multiple_values(true)
             .value_name("PKG")
             .help("packages to remove"))
 }
