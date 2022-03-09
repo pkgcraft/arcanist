@@ -20,11 +20,7 @@ impl Settings {
         path: Option<P>,
         skip_config: bool,
     ) -> Result<Self> {
-        let mut s = Config::default();
-
-        // use defaults
-        s.merge(Config::try_from(&Settings::default())?)
-            .context("failed merging config defaults")?;
+        let mut s = Config::builder().add_source(Config::try_from(&Settings::default())?);
 
         let binary = env!("CARGO_BIN_NAME");
         let binary_upper = binary.to_uppercase();
@@ -34,31 +30,28 @@ impl Settings {
             match path {
                 Some(path) => {
                     let path = path.as_ref();
-                    s.merge(File::from(path).required(true))
-                        .context(format!("failed merging config settings: {:?}", path))?;
+                    s = s.add_source(File::from(path).required(true));
                 }
                 None => {
                     let config_path = config.path.config.join(format!("{}.toml", &binary));
-                    s.merge(File::from(config_path.as_path()).required(false))
-                        .context(format!(
-                            "failed merging config settings: {:?}",
-                            &config_path
-                        ))?;
+                    s = s.add_source(File::from(config_path.as_path()).required(false));
                 }
             }
         }
 
         // merge env variable overrides
-        s.merge(Environment::with_prefix(&binary_upper).separator("_"))
-            .context("failed merging env settings")?;
+        s = s.add_source(Environment::with_prefix(&binary_upper).separator("_"));
 
         // respect NO_COLOR -- https://no-color.org/
         if env::var_os("NO_COLOR").is_some() {
-            s.set("color", false).context("failed setting color")?;
+            s = s
+                .set_override("color", false)
+                .context("failed setting color")?;
         }
 
         // serialize to struct
-        let settings: Settings = s.try_into().context("failed serializing settings")?;
+        let s = s.build().context("failed building config")?;
+        let settings: Settings = s.try_deserialize().context("failed serializing settings")?;
 
         Ok(settings)
     }
