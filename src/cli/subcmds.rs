@@ -21,7 +21,7 @@ pub fn register() -> Vec<Command<'static>> {
     ]
 }
 
-pub async fn run(args: &ArgMatches, client: &mut Client, settings: &mut Settings) -> Result<()> {
+pub async fn run(args: &ArgMatches, client: &mut Client, settings: &Settings) -> Result<()> {
     let (subcmd, m) = args.subcommand().unwrap();
     match subcmd {
         "add" => add::run(m, client).await,

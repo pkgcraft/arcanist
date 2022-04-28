@@ -128,7 +128,7 @@ fn load_settings() -> Result<(Settings, PkgcraftConfig, ArgMatches)> {
 
 #[tokio::main]
 async fn try_main() -> Result<()> {
-    let (mut settings, config, args) = load_settings()?;
+    let (settings, config, args) = load_settings()?;
     let user_agent = format!("{}-{}", env!("CARGO_BIN_NAME"), env!("CARGO_PKG_VERSION"));
     let timeout = args
         .value_of("timeout")
@@ -167,7 +167,7 @@ async fn try_main() -> Result<()> {
     };
 
     let mut client: Client = arcanist::Client::new(channel);
-    subcmds::run(&args, &mut client, &mut settings).await
+    subcmds::run(&args, &mut client, &settings).await
 }
 
 fn main() {

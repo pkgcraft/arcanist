@@ -24,7 +24,7 @@ pub fn cmd() -> Command<'static> {
         .subcommand(sync::cmd())
 }
 
-pub async fn run(args: &ArgMatches, client: &mut Client, _settings: &mut Settings) -> Result<()> {
+pub async fn run(args: &ArgMatches, client: &mut Client, _settings: &Settings) -> Result<()> {
     let (subcmd, m) = args.subcommand().unwrap();
     match subcmd {
         "add" => add::run(m, client).await,
