@@ -103,7 +103,7 @@ fn load_settings() -> Result<(Settings, PkgcraftConfig, ArgMatches)> {
         // convert raw socket arg into url
         settings.url = match url.parse::<SocketAddr>() {
             Err(_) => url.to_string(),
-            Ok(socket) => format!("http://{}", socket),
+            Ok(socket) => format!("http://{socket}"),
         };
     }
 
@@ -148,7 +148,7 @@ async fn try_main() -> Result<()> {
     // connect to arcanist
     let channel: Channel = match Url::parse(&url) {
         Err(_) => {
-            let error = format!("failed connecting to arcanist socket: {:?}", &url);
+            let error = format!("failed connecting to arcanist socket: {url}");
             Endpoint::from_static("http://[::]")
                 .user_agent(user_agent)?
                 .connect_with_connector(service_fn(move |_: Uri| UnixStream::connect(url.clone())))
@@ -156,7 +156,7 @@ async fn try_main() -> Result<()> {
                 .context(error)?
         }
         Ok(_) => {
-            let error = format!("failed connecting to arcanist: {:?}", &url);
+            let error = format!("failed connecting to arcanist: {url}");
             Endpoint::from_shared(url)?
                 .connect_timeout(Duration::from_secs(timeout))
                 .user_agent(user_agent)?
@@ -173,13 +173,13 @@ async fn try_main() -> Result<()> {
 fn main() {
     // extract error message from tonic status responses
     if let Err(error) = try_main() {
-        eprintln!("error: {}\n", error);
+        eprintln!("error: {error}\n");
         error
             .chain()
             .skip(1)
             .for_each(|cause| match cause.downcast_ref() {
                 Some(e @ tonic::Status { .. }) => eprintln!("caused by: {}", e.message()),
-                _ => eprintln!("caused by: {}", cause),
+                _ => eprintln!("caused by: {cause}"),
             });
         process::exit(1);
     }

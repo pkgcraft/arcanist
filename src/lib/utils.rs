@@ -66,10 +66,7 @@ where
                 None => {
                     // try to kill arcanist, but ignore failures
                     arcanist.kill().await.ok();
-                    Err(Error::Start(format!(
-                        "unknown arcanist message: {:?}",
-                        line
-                    )))
+                    Err(Error::Start(format!("unknown arcanist message: {line}")))
                 }
             }
         }
@@ -98,7 +95,7 @@ pub async fn connect_or_spawn<P: AsRef<Path>>(
     let socket_path = path.as_ref();
     let socket = socket_path
         .to_str()
-        .ok_or_else(|| Error::Connect(format!("invalid socket path: {:?}", &socket_path)))?
+        .ok_or_else(|| Error::Connect(format!("invalid socket path: {socket_path:?}")))?
         .to_string();
 
     if let Err(e) = UnixStream::connect(&socket_path) {
@@ -112,7 +109,7 @@ pub async fn connect_or_spawn<P: AsRef<Path>>(
                 let args: Option<Vec<&str>> = None;
                 spawn(&socket, env, args, timeout).await?;
             }
-            _ => return Err(Error::Connect(format!("{}: {:?}", e, &socket_path))),
+            _ => return Err(Error::Connect(format!("{e}: {socket_path:?}"))),
         }
     }
 

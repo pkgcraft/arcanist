@@ -33,7 +33,7 @@ impl Settings {
                     s = s.add_source(File::from(path).required(true));
                 }
                 None => {
-                    let config_path = config.path.config.join(format!("{}.toml", &binary));
+                    let config_path = config.path.config.join(format!("{binary}.toml"));
                     s = s.add_source(File::from(config_path.as_path()).required(false));
                 }
             }

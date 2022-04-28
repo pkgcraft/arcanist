@@ -19,6 +19,6 @@ pub async fn run(args: &ArgMatches, client: &mut Client) -> Result<()> {
     client
         .create_repo(request)
         .await
-        .context(format!("failed creating repo: {:?}", &name))?;
+        .context(format!("failed creating repo: {name}"))?;
     Ok(())
 }

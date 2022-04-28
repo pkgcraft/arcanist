@@ -115,8 +115,8 @@ async fn main() -> Result<()> {
         Err(_) if socket.starts_with('/') => {
             uds::verify_socket_path(&socket)?;
             let listener = UnixListener::bind(&socket)
-                .context(format!("failed binding to socket: {:?}", &socket))?;
-            eprintln!("arcanist listening at: {}", &socket);
+                .context(format!("failed binding to socket: {socket}"))?;
+            eprintln!("arcanist listening at: {socket}");
             let incoming = {
                 async_stream::stream! {
                     loop {
@@ -130,15 +130,15 @@ async fn main() -> Result<()> {
         Ok(socket) => {
             let listener = TcpListener::bind(&socket)
                 .await
-                .context(format!("failed binding to socket: {:?}", &socket))?;
+                .context(format!("failed binding to socket: {socket}"))?;
             let addr = listener
                 .local_addr()
-                .context(format!("invalid local address: {:?}", &socket))?;
-            eprintln!("arcanist listening at: {}", &addr);
+                .context(format!("invalid local address: {socket}"))?;
+            eprintln!("arcanist listening at: {addr}");
             let incoming = TcpListenerStream::new(listener);
             server.serve_with_incoming(incoming).await?
         }
-        _ => bail!("invalid socket: {:?}", &socket),
+        _ => bail!("invalid socket: {socket}"),
     }
 
     Ok(())

@@ -5,7 +5,7 @@ pub fn str_to_bool(s: &str) -> Result<bool> {
     match s.to_lowercase().as_ref() {
         "y" | "yes" | "true" | "1" => Ok(true),
         "n" | "no" | "false" | "0" => Ok(false),
-        _ => Err(anyhow!("not a boolean value: {:?}", s)),
+        _ => Err(anyhow!("not a boolean value: {s}")),
     }
 }
 
@@ -13,7 +13,7 @@ pub fn str_to_bool(s: &str) -> Result<bool> {
 pub fn positive_int(v: &str) -> Result<()> {
     let int = v
         .parse::<u64>()
-        .context(format!("invalid positive integer: {:?}", v))?;
+        .context(format!("invalid positive integer: {v}"))?;
     ensure!(int >= 1, "must be >= 1");
     Ok(())
 }

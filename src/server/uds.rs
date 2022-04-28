@@ -64,16 +64,16 @@ pub fn verify_socket_path<P: AsRef<Path>>(path: P) -> Result<()> {
     let path = path.as_ref();
     let socket_dir = &path
         .parent()
-        .context(format!("invalid socket path: {:?}", &path))?;
+        .context(format!("invalid socket path: {path:?}"))?;
 
     // check if the socket is already in use
     if StdUnixStream::connect(&path).is_ok() {
-        bail!("arcanist already running on: {:?}", &path);
+        bail!("arcanist already running on: {path:?}");
     }
 
     // create dirs and remove old socket file if it exists
     fs::create_dir_all(socket_dir)
-        .context(format!("failed creating socket dir: {:?}", socket_dir))?;
+        .context(format!("failed creating socket dir: {socket_dir:?}"))?;
     fs::remove_file(&path).unwrap_or_default();
 
     Ok(())

@@ -26,7 +26,7 @@ pub async fn run(args: &ArgMatches, client: &mut Client) -> Result<()> {
     let response = client
         .add_repo(request)
         .await
-        .context(format!("failed adding repo: {:?}", &name))?;
+        .context(format!("failed adding repo: {name}"))?;
     println!("{}", response.into_inner().data);
     Ok(())
 }

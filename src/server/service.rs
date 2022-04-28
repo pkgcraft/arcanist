@@ -30,7 +30,7 @@ impl Arcanist for ArcanistService {
         let config = &mut self.config.write().await;
         match config.repos.add(&req.name, &req.uri) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
-            Err(e) => Err(Status::internal(format!("{}", &e))),
+            Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
                 PkgcraftConfig::make_current(config.clone());
                 let reply = StringResponse { data: req.name };
@@ -47,7 +47,7 @@ impl Arcanist for ArcanistService {
         let config = &mut self.config.write().await;
         match config.repos.del(&req.data, true) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
-            Err(e) => Err(Status::internal(format!("{}", &e))),
+            Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
                 PkgcraftConfig::make_current(config.clone());
                 let reply = ListResponse { data: req.data };
@@ -63,7 +63,7 @@ impl Arcanist for ArcanistService {
         let mut repos: Vec<String> = Vec::new();
         let config = self.config.read().await;
         for (id, config) in config.repos.configs.iter() {
-            repos.push(format!("{}: {:?}", id, config.location));
+            repos.push(format!("{id}: {:?}", config.location));
         }
         let reply = ListResponse { data: repos };
         Ok(Response::new(reply))
@@ -77,7 +77,7 @@ impl Arcanist for ArcanistService {
         let config = &mut self.config.write().await;
         match config.repos.create(&req.data) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
-            Err(e) => Err(Status::internal(format!("{}", &e))),
+            Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
                 PkgcraftConfig::make_current(config.clone());
                 let reply = StringResponse { data: req.data };
@@ -94,7 +94,7 @@ impl Arcanist for ArcanistService {
         let config = &mut self.config.write().await;
         match config.repos.sync(req.data.clone()) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
-            Err(e) => Err(Status::internal(format!("{}", &e))),
+            Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
                 PkgcraftConfig::make_current(config.clone());
                 let reply = ListResponse { data: req.data };
@@ -147,7 +147,7 @@ impl Arcanist for ArcanistService {
         let version = format!("{}-{}", env!("CARGO_BIN_NAME"), env!("CARGO_PKG_VERSION"));
         let req = request.into_inner();
         let reply = StringResponse {
-            data: format!("client: {}, server: {}", req.data, version),
+            data: format!("client: {}, server: {version}", req.data),
         };
         Ok(Response::new(reply))
     }
