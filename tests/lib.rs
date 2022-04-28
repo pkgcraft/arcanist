@@ -14,7 +14,7 @@ static TARGET_DIR: Lazy<String> = Lazy::new(|| {
 async fn test_uds() {
     // ignore system/user config and run arcanist from build dir
     let env: [(&str, &str); 1] = [("PATH", &TARGET_DIR)];
-    let args = ["--config", "no"];
+    let args = ["--config-none"];
 
     let tmp_dir = Builder::new().prefix("arcanist.").tempdir().unwrap();
     let socket_path = tmp_dir.path().to_owned().join("arcanist.sock");
@@ -26,8 +26,7 @@ async fn test_uds() {
 
     let mut cmd = assert_command::cargo_bin("pakt").unwrap();
     let output = cmd
-        .arg("--config")
-        .arg("no")
+        .arg("--config-none")
         .arg("-c")
         .arg(&socket)
         .arg("version")
@@ -46,7 +45,7 @@ async fn test_uds() {
 async fn test_tcp() {
     // ignore system/user config and run arcanist from build dir
     let env: [(&str, &str); 1] = [("PATH", &TARGET_DIR)];
-    let args = ["--config", "no"];
+    let args = ["--config-none"];
 
     for addr in ["127.0.0.1:0", "[::]:0"] {
         let (mut arcanist, socket) = arcanist::spawn(addr, Some(env), Some(args), Some(5))
@@ -63,8 +62,7 @@ async fn test_tcp() {
         for serve_addr in [socket, url] {
             let mut cmd = assert_command::cargo_bin("pakt").unwrap();
             let output = cmd
-                .arg("--config")
-                .arg("no")
+                .arg("--config-none")
                 .arg("-c")
                 .arg(&serve_addr)
                 .arg("version")

@@ -48,13 +48,16 @@ pub fn cmd() -> Command<'static> {
             .long("config")
             .value_name("PATH")
             .help("path to config file"))
+        .arg(Arg::new("config-none")
+            .long("config-none")
+            .help("don't load config file"))
 }
 
 fn load_settings() -> Result<(Settings, PkgcraftConfig)> {
     let app = cmd();
     let args = app.get_matches();
     let config_file = args.value_of("config");
-    let skip_config = config_file == Some("no");
+    let skip_config = args.is_present("config-none");
 
     // load pkgcraft config
     let config = PkgcraftConfig::new("pkgcraft", "", !skip_config)
