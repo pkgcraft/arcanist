@@ -32,10 +32,9 @@ async fn test_uds() {
         .arg("version")
         .output()
         .unwrap();
-    let expected = format!(
-        "client: pakt-{0}, server: arcanist-{0}",
-        env!("CARGO_PKG_VERSION")
-    );
+
+    let ver = env!("CARGO_PKG_VERSION");
+    let expected = format!("client: pakt-{ver}, server: arcanist-{ver}");
     assert_eq!(str::from_utf8(&output.stdout).unwrap().trim(), expected);
 
     arcanist.kill().await.unwrap();
@@ -53,10 +52,8 @@ async fn test_tcp() {
             .unwrap();
         let url = format!("http://{}", &socket);
 
-        let expected = format!(
-            "client: pakt-{0}, server: arcanist-{0}",
-            env!("CARGO_PKG_VERSION")
-        );
+        let ver = env!("CARGO_PKG_VERSION");
+        let expected = format!("client: pakt-{ver}, server: arcanist-{ver}");
 
         // verify both raw socket and url args work
         for serve_addr in [socket, url] {
