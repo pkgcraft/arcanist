@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use pkgcraft::config::Config as PkgcraftConfig;
-use pkgcraft::Error;
+use pkgcraft::{repo::Repository, Error};
 use tokio::sync::mpsc;
 use tokio::sync::RwLock;
 use tokio_stream::wrappers::ReceiverStream;
@@ -28,7 +28,7 @@ impl Arcanist for ArcanistService {
     ) -> Result<Response<StringResponse>, Status> {
         let req = request.into_inner();
         let config = &mut self.config.write().await;
-        match config.repos.add(&req.name, &req.uri) {
+        match config.repos.add(&req.name, 0, &req.uri) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
             Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
@@ -62,8 +62,8 @@ impl Arcanist for ArcanistService {
     ) -> Result<Response<ListResponse>, Status> {
         let mut repos: Vec<String> = Vec::new();
         let config = self.config.read().await;
-        for (id, config) in config.repos.configs.iter() {
-            repos.push(format!("{id}: {:?}", config.location));
+        for (id, repo) in config.repos.iter() {
+            repos.push(format!("{id}: {:?}", repo.path()));
         }
         let reply = ListResponse { data: repos };
         Ok(Response::new(reply))
@@ -75,7 +75,7 @@ impl Arcanist for ArcanistService {
     ) -> Result<Response<StringResponse>, Status> {
         let req = request.into_inner();
         let config = &mut self.config.write().await;
-        match config.repos.create(&req.data) {
+        match config.repos.create(&req.data, 0) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
             Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
