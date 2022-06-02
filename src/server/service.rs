@@ -28,11 +28,10 @@ impl Arcanist for ArcanistService {
     ) -> Result<Response<StringResponse>, Status> {
         let req = request.into_inner();
         let config = &mut self.config.write().await;
-        match config.repos.add(&req.name, 0, &req.uri) {
+        match config.add_repo(&req.name, 0, &req.uri) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
             Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
-                PkgcraftConfig::make_current(config.clone());
                 let reply = StringResponse { data: req.name };
                 Ok(Response::new(reply))
             }
@@ -45,11 +44,10 @@ impl Arcanist for ArcanistService {
     ) -> Result<Response<ListResponse>, Status> {
         let req = request.into_inner();
         let config = &mut self.config.write().await;
-        match config.repos.del(&req.data, true) {
+        match config.del_repos(&req.data, true) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
             Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
-                PkgcraftConfig::make_current(config.clone());
                 let reply = ListResponse { data: req.data };
                 Ok(Response::new(reply))
             }
@@ -75,11 +73,10 @@ impl Arcanist for ArcanistService {
     ) -> Result<Response<StringResponse>, Status> {
         let req = request.into_inner();
         let config = &mut self.config.write().await;
-        match config.repos.create(&req.data, 0) {
+        match config.create_repo(&req.data, 0) {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
             Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
-                PkgcraftConfig::make_current(config.clone());
                 let reply = StringResponse { data: req.data };
                 Ok(Response::new(reply))
             }
@@ -96,7 +93,6 @@ impl Arcanist for ArcanistService {
             Err(Error::Config(e)) => Err(Status::failed_precondition(&e)),
             Err(e) => Err(Status::internal(format!("{e}"))),
             Ok(_) => {
-                PkgcraftConfig::make_current(config.clone());
                 let reply = ListResponse { data: req.data };
                 Ok(Response::new(reply))
             }
