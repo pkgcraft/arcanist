@@ -80,8 +80,7 @@ fn load_settings() -> Result<(Settings, PkgcraftConfig)> {
             .path
             .run
             .join("arcanist.sock")
-            .to_string_lossy()
-            .into_owned();
+            .to_string();
     }
 
     // defaults to warning level
